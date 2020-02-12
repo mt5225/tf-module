@@ -28,7 +28,7 @@ pipeline {
                      env.module_name = module_data['name']
                      env.provider = module_data['provider']
                      env.namespace = module_data['namespace']
-                     env.version = sprintf("%s.%s", module_data['version'].split('-')[0], BUILD_NUMBER)
+                     env.version = sprintf("%s%s", module_data['version'][0..-2], BUILD_NUMBER)
                      env.url = "${BASE_URL}/${env.namespace}/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz"
                      def jobdesc = sprintf("%s %s",  env.module_name, env.version)
                      currentBuild.description = jobdesc.toLowerCase()
@@ -59,7 +59,7 @@ pipeline {
                         "files": [
                             {
                             "pattern": "./${env.version}.tgz",
-                            "target": "mt5225/${env.module_name}/${env.provider}/${BUILD_NUMBER}/"
+                            "target": "${env.namespace}/${env.module_name}/${env.provider}/${BUILD_NUMBER}/"
                             }
                         ]
                         }"""
