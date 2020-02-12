@@ -19,8 +19,9 @@ pipeline {
         docker {
             image 'hashicorp/terraform:0.12.20'
             args '--entrypoint=""'
-            def MODULE_LIST = inputParamsString(new File(pwd()))
         }
+
+        def MODULE_LIST = inputParamsString(new File(pwd()))
     }
 
     parameters {
