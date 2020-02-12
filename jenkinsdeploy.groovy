@@ -20,11 +20,10 @@ pipeline {
             image 'hashicorp/terraform:0.12.20'
             args '--entrypoint=""'
         }
-
-        def MODULE_LIST = inputParamsString(new File(pwd()))
     }
 
     parameters {
+        def MODULE_LIST = inputParamsString(new File(pwd()))
         choice(name: 'module_name' , choices: MODULE_LIST, description: "module name")
     }
 
