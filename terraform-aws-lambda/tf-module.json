@@ -1,0 +1,6 @@
+{
+  "version": "1.0.x",
+  "name": "aws-lambda",
+  "provider": "aws",
+  "namespace": "prodege"
+}

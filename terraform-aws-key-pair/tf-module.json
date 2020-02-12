@@ -1,0 +1,6 @@
+{
+  "version": "2.0.x",
+  "name": "aws-keypair",
+  "provider": "aws",
+  "namespace": "prodege"
+}
