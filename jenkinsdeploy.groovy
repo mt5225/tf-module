@@ -26,8 +26,10 @@ pipeline {
                  script {                   
                      env.module_name = params.module_name
                      env.provider = 'aws'
-                     env.version = params.version
+                     env.version = "v${params.version}"
                      env.url = "${BASE_URL}/mt5225/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz"
+                     jobdesc = sprintf("%s %s",  env.module_name, env.version)
+                     currentBuild.description = jobdesc.toLowerCase()
                  }
              }
          }
