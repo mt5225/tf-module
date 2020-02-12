@@ -1,18 +1,13 @@
-import static groovy.io.FileType.FILES
-@NonCPS
-def inputParamsString(dir) {
- def list = []
- dir.eachFileRecurse(FILES) {
-  // Change `.properties` to the file extension you are interested in
-  if (it.name.beginWith('terraform-aws')) {
-   // If the full path is required remove `.getName()`
-   list << it.getName()
-  }
- }
- list.join("\n")
+def findModules() {
+    // Find relevant AMIs based on their name
+    def sout = new StringBuffer(), serr = new StringBuffer()
+    def proc = 'ls -d terraform-aws-*'.execute()
+    proc.consumeProcessOutput(sout, serr)
+    proc.waitForOrKill(10000)
+    return sout.tokenize() 
 }
 
-
+def MODULE_LIST = findModules().join('\n')
 
 pipeline {
     agent {
@@ -23,7 +18,7 @@ pipeline {
     }
 
     parameters {
-        def MODULE_LIST = inputParamsString(new File(pwd()))
+        
         choice(name: 'module_name' , choices: MODULE_LIST, description: "module name")
     }
 
