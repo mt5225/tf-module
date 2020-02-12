@@ -1,15 +1,3 @@
-def findModules() {
-    // Find relevant AMIs based on their name
-    def sout = new StringBuffer(), serr = new StringBuffer()
-    def proc = 'ls -d *'.execute()
-    proc.consumeProcessOutput(sout, serr)
-    proc.waitForOrKill(10000)
-    return sout.tokenize() 
-}
-
-def MODULE_LIST = findModules().join('\n')
-println 'module list ' + findModules()
-
 pipeline {
     agent {
         docker {
@@ -19,18 +7,31 @@ pipeline {
     }
 
     parameters {
-        choice(name: 'module_name' , choices: MODULE_LIST, description: "module name")
+        choice name: 'module_name' , choices: ['key-pair', 'lambda', 'route53'], description: ''
     }
 
     stages {
+         stage ('Create variables') {
+             steps {
+                 script {
+                     env.module_name = 'terraform-aws-' + params.module_name
+                 }
+             }
+         }
+
          stage('Validate') {
            steps {
-               sh 'echo'
+               dir("./${env.module_name}") {
+                  sh 'terraform validate'
+               }
+               
            }
          }
          stage ('Lint') {
            steps {
-               sh 'echo'
+               dir("./${env.module_name}") {
+                  sh 'terraform fmt -recursive'
+               }
            }
          }
          stage('Create TGZ') {
@@ -45,5 +46,5 @@ pipeline {
            }
 
          }
-     }
+    }
 }
