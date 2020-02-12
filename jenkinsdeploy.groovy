@@ -12,8 +12,7 @@ pipeline {
     }
 
     parameters {
-        choice name: 'module_name' , choices: ['terraform-aws-key-pair', 'terraform-aws-lambda', 'terraform-aws-route53'], description: ''
-        string(defaultValue: '0.0.1', description: '', name: 'version', trim: true)
+        choice name: 'folder' , choices: ['terraform-aws-key-pair', 'terraform-aws-lambda', 'terraform-aws-route53'], description: ''
     }
 
     options {
@@ -31,11 +30,11 @@ pipeline {
          stage ('Create variables') {
              steps {
                  script {      
-                     def module_data = readJSON file: "./${env.module_name}/tf-module.json"            
-                     env.module_name = module_data['name']
-                     env.provider = module_data['provider']
-                     env.namespace = module_data['namespace']
-                     env.version = module_data['version']
+                     def json_data = readJSON file: "./${params.folder}/tf-module.json"            
+                     env.module_name = json_data['name']
+                     env.provider = json_data['provider']
+                     env.namespace = json_data['namespace']
+                     env.version = json_data['version']
                      env.url = "${ARTIFACTORY_BASE_URL}/${env.namespace}/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz"
                      def jobdesc = sprintf("%s %s",  env.module_name, env.version)
                      currentBuild.description = jobdesc.toLowerCase()
