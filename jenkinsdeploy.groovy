@@ -30,7 +30,8 @@ pipeline {
          stage ('Create variables') {
              steps {
                  script {      
-                     def json_data = readJSON file: "./${params.folder}/tf-module.json"            
+                     def json_data = readJSON file: "./${params.folder}/tf-module.json"
+                     env.module_folder = params.folder            
                      env.module_name = json_data['name']
                      env.provider = json_data['provider']
                      env.namespace = json_data['namespace']
@@ -44,7 +45,7 @@ pipeline {
 
          stage('Create .tgz') {
              steps {
-               sh "tar -cvzf ${env.version}.tgz ${env.module_name}"
+               sh "tar -cvzf ${env.version}.tgz ${env.module_folder}"
            }
 
          }
