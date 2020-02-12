@@ -12,13 +12,14 @@ def inputParamsString(dir) {
  list.join("\n")
 }
 
-def MODULE_LIST = inputParamsString(new File(pwd()))
+
 
 pipeline {
     agent {
         docker {
             image 'hashicorp/terraform:0.12.20'
             args '--entrypoint=""'
+            def MODULE_LIST = inputParamsString(new File(pwd()))
         }
     }
 
