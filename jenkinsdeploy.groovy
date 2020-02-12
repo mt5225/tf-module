@@ -23,12 +23,14 @@ pipeline {
     stages {
          stage ('Create variables') {
              steps {
-                 script {                   
-                     env.module_name = params.module_name
-                     env.provider = 'aws'
-                     env.version = "v${params.version}"
-                     env.url = "${BASE_URL}/mt5225/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz"
-                     jobdesc = sprintf("%s %s",  env.module_name, env.version)
+                 script {      
+                     def module_data = readJSON file: "./${env.module_name}/tf-module.json"            
+                     env.module_name = module_data['name']
+                     env.provider = module_data['provider']
+                     env.namespace = module_data['namespace']
+                     env.version = sprintf("%s.%s", module_data['version'].split('-')[0], BUILD_NUMBER)
+                     env.url = "${BASE_URL}/${env.namespace}/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz"
+                     def jobdesc = sprintf("%s %s",  env.module_name, env.version)
                      currentBuild.description = jobdesc.toLowerCase()
                  }
              }
