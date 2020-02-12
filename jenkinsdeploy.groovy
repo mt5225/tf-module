@@ -76,13 +76,11 @@ pipeline {
          stage('Update registry') {
              steps {
                  sh "echo ${env.url}"
-                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',  credentialsId: "aws"]]) {                 
-                    AWS("""
-                    s3 ls
-                    """)
-                 }
+                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',  credentialsId: "aws"]]) {
+                     AWS("s3 ls")
+                    }
                 }
-             }
-         }
+            }
     }
+    
 }
