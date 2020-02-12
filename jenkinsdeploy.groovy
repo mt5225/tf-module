@@ -26,30 +26,22 @@ pipeline {
              }
          }
 
-         stage('Init & Validate') {
-           steps {
-               dir("./${env.module_name}") {
-                  sh 'terraform init'
-                  sh 'terraform validate'
-               }
-               
-           }
-         }
          stage ('Lint') {
-           steps {
+             steps {
                dir("./${env.module_name}") {
                   sh 'terraform fmt -recursive'
                }
            }
          }
+         
          stage('Create TGZ') {
-            steps {
+             steps {
                sh 'echo'
            }
 
          }
          stage('Upload') {
-            steps {
+             steps {
                sh 'echo'
            }
 
