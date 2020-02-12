@@ -1,3 +1,5 @@
+def BASE_URL = 'http://artifactory.local:8081/artifactory'
+
 pipeline {
     agent {
         docker {
@@ -7,7 +9,7 @@ pipeline {
     }
 
     parameters {
-        choice name: 'module_name' , choices: ['key-pair', 'lambda', 'route53'], description: ''
+        choice name: 'module_name' , choices: ['terraform-aws-key-pair', 'terraform-aws-lambda', 'terraform-aws-route53'], description: ''
         string(defaultValue: '0.0.1', description: '', name: 'version', trim: true)
     }
 
@@ -21,10 +23,11 @@ pipeline {
     stages {
          stage ('Create variables') {
              steps {
-                 script {
-                     env.module_name = 'terraform-aws-' + params.module_name
+                 script {                   
+                     env.module_name = params.module_name
                      env.provider = 'aws'
                      env.version = params.version
+                     env.url = "${BASE_URL}/mt5225/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.module_name}.${env.version}.tgz"
                  }
              }
          }
@@ -61,7 +64,7 @@ pipeline {
          }
          stage('Update registry') {
              steps {
-                 sh 'echo'
+                 sh "${env.url}"
              }
          }
     }
