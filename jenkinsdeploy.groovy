@@ -27,7 +27,7 @@ pipeline {
                      env.module_name = params.module_name
                      env.provider = 'aws'
                      env.version = params.version
-                     env.url = "${BASE_URL}/mt5225/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.module_name}.${env.version}.tgz"
+                     env.url = "${BASE_URL}/mt5225/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz"
                  }
              }
          }
@@ -42,7 +42,7 @@ pipeline {
 
          stage('Create TGZ') {
              steps {
-               sh "tar -cvzf ${env.module_name}.${env.version}.tgz ${env.module_name}"
+               sh "tar -cvzf ${env.version}.tgz ${env.module_name}"
            }
 
          }
@@ -54,7 +54,7 @@ pipeline {
                         """{
                         "files": [
                             {
-                            "pattern": "./${env.module_name}.${env.version}.tgz",
+                            "pattern": "./${env.version}.tgz",
                             "target": "mt5225/${env.module_name}/${env.provider}/${BUILD_NUMBER}/"
                             }
                         ]
