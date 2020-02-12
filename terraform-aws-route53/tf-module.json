@@ -1,5 +1,5 @@
 {
-  "version": "1.0.x",
+  "version": "1.0.20",
   "name": "aws-route53",
   "provider": "aws",
   "namespace": "prodege"

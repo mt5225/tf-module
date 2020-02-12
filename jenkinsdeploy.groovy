@@ -1,4 +1,7 @@
-def BASE_URL = 'http://artifactory.local:8081/artifactory'
+@Library('github.com/releaseworks/jenkinslib') _
+
+def ARTIFACTORY_BASE_URL = 'http://artifactory.local:8081/artifactory'
+def AWS_DEFAULT_REGION = 'us-west-2'
 
 pipeline {
     agent {
@@ -20,6 +23,10 @@ pipeline {
         disableConcurrentBuilds()
     }
 
+    environment {
+        AWS_DEFAULT_REGION = 'us-west-2'
+    }
+
     stages {
          stage ('Create variables') {
              steps {
@@ -28,8 +35,8 @@ pipeline {
                      env.module_name = module_data['name']
                      env.provider = module_data['provider']
                      env.namespace = module_data['namespace']
-                     env.version = sprintf("%s%s", module_data['version'][0..-2], BUILD_NUMBER)
-                     env.url = "${BASE_URL}/${env.namespace}/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz"
+                     env.version = module_data['version']
+                     env.url = "${ARTIFACTORY_BASE_URL}/${env.namespace}/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz"
                      def jobdesc = sprintf("%s %s",  env.module_name, env.version)
                      currentBuild.description = jobdesc.toLowerCase()
                  }
@@ -69,6 +76,12 @@ pipeline {
          stage('Update registry') {
              steps {
                  sh "echo ${env.url}"
+                 withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',  credentialsId: "aws"]]) {                 
+                    AWS("""
+                    s3 ls
+                    """)
+                 }
+                }
              }
          }
     }

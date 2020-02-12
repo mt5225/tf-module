@@ -1,5 +1,5 @@
 {
-  "version": "1.0.x",
+  "version": "1.0.4",
   "name": "aws-lambda",
   "provider": "aws",
   "namespace": "prodege"
