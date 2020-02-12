@@ -1,7 +1,7 @@
 def findModules() {
     // Find relevant AMIs based on their name
     def sout = new StringBuffer(), serr = new StringBuffer()
-    def proc = 'ls -d terraform-aws-*'.execute()
+    def proc = 'ls -d *'.execute()
     proc.consumeProcessOutput(sout, serr)
     proc.waitForOrKill(10000)
     return sout.tokenize() 
@@ -18,7 +18,6 @@ pipeline {
     }
 
     parameters {
-        
         choice(name: 'module_name' , choices: MODULE_LIST, description: "module name")
     }
 
