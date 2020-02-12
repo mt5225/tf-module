@@ -10,6 +10,13 @@ pipeline {
         choice name: 'module_name' , choices: ['key-pair', 'lambda', 'route53'], description: ''
     }
 
+    options {
+        timeout(60)
+        timestamps()
+        ansiColor('xterm')
+        disableConcurrentBuilds()
+    }
+
     stages {
          stage ('Create variables') {
              steps {
@@ -19,9 +26,10 @@ pipeline {
              }
          }
 
-         stage('Validate') {
+         stage('Init & Validate') {
            steps {
                dir("./${env.module_name}") {
+                  sh 'terraform init'
                   sh 'terraform validate'
                }
                
