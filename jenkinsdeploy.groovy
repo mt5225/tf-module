@@ -8,6 +8,7 @@ pipeline {
 
     parameters {
         choice name: 'module_name' , choices: ['key-pair', 'lambda', 'route53'], description: ''
+        string(defaultValue: '0.0.1', description: '', name: 'version', trim: true)
     }
 
     options {
@@ -22,6 +23,8 @@ pipeline {
              steps {
                  script {
                      env.module_name = 'terraform-aws-' + params.module_name
+                     env.provider = 'aws'
+                     env.version = params.version
                  }
              }
          }
@@ -33,18 +36,33 @@ pipeline {
                }
            }
          }
-         
+
          stage('Create TGZ') {
              steps {
-               sh 'echo'
+               sh "tar -cvzf ${env.module_name}.${env.version}.tgz ${env.module_name}"
            }
 
          }
          stage('Upload') {
              steps {
-               sh 'echo'
-           }
-
+               rtUpload (
+                    serverId: "artifactory-01",
+                    spec:
+                        """{
+                        "files": [
+                            {
+                            "pattern": "./${env.module_name}.${env.version}.tgz",
+                            "target": "mt5225/${env.module_name}/${env.provider}/${BUILD_NUMBER}/"
+                            }
+                        ]
+                        }"""
+                )
+           }         
+         }
+         stage('Update registry') {
+             steps {
+                 sh 'echo'
+             }
          }
     }
 }
