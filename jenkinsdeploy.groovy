@@ -74,6 +74,9 @@ pipeline {
            }         
          }
          stage('Update registry') {
+             agent {
+                docker { image 'releaseworks/awscli:latest' }
+                }
              steps {
                  sh "echo ${env.url}"
                  withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',  credentialsId: "aws"]]) {
