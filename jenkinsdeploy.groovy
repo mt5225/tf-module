@@ -6,7 +6,7 @@ def AWS_DEFAULT_REGION = 'us-west-2'
 pipeline {
     agent {
         docker {
-            image 'hashicorp/terraform:0.12.20'
+            image 'releaseworks/awscli:latest'
             args '--entrypoint=""'
         }
     }
@@ -43,15 +43,7 @@ pipeline {
              }
          }
 
-         stage ('Lint') {
-             steps {
-               dir("./${env.module_name}") {
-                  sh 'terraform fmt -recursive'
-               }
-           }
-         }
-
-         stage('Create TGZ') {
+         stage('Create .tgz') {
              steps {
                sh "tar -cvzf ${env.version}.tgz ${env.module_name}"
            }
@@ -74,9 +66,6 @@ pipeline {
            }         
          }
          stage('Update registry') {
-             agent {
-                docker { image 'releaseworks/awscli:latest' }
-                }
              steps {
                  sh "echo ${env.url}"
                  withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',  credentialsId: "aws"]]) {
