@@ -69,7 +69,7 @@ pipeline {
              steps {
                  sh "echo ${env.url}"
                  withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',  credentialsId: "aws"]]) {
-                     AWS("s3 ls")
+                     sh "aws s3 ls"
                     }
                 }
             }
