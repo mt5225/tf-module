@@ -27,16 +27,26 @@ pipeline {
     }
 
     stages {
-         stage('fmt') {
+         stage('Validate') {
+           steps {
+               sh 'echo'
+           }
+         }
+         stage ('Lint') {
+           steps {
+               sh 'echo'
+           }
+         }
+         stage('Create TGZ') {
+            steps {
+               sh 'echo'
+           }
 
          }
-         stage ('validate') {
-
-         }
-         stage('create tgz') {
-
-         }
-         stage('upload') {
+         stage('Upload') {
+            steps {
+               sh 'echo'
+           }
 
          }
      }
