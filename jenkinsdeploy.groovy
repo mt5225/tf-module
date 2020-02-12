@@ -8,6 +8,7 @@ def findModules() {
 }
 
 def MODULE_LIST = findModules().join('\n')
+println 'module list ' + findModules()
 
 pipeline {
     agent {
