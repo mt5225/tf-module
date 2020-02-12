@@ -69,10 +69,20 @@ pipeline {
              steps {
                  sh "echo ${env.url}"
                  withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',  credentialsId: "aws"]]) {
-                     sh "aws s3 ls"
-                    }
+                    script {
+                        def reg = """
+                        aws dynamodb put-item \
+                            --table-name 'TerraformRegistry-modules' \
+                            --item '{
+                                "Id": {"S":"${env.namespace}/${env.module_name}/${env.provider}"},
+                                "Version": {"S":"${env.version}"},
+                                "Source": {"S":"${env.url}"}
+                            }'
+                        """
+                        sh reg
+                     }
+                     }
                 }
             }
-    }
-    
+    }    
 }
