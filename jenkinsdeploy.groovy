@@ -64,7 +64,7 @@ pipeline {
          }
          stage('Update registry') {
              steps {
-                 sh "${env.url}"
+                 sh "echo ${env.url}"
              }
          }
     }
