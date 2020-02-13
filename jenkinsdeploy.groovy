@@ -36,7 +36,7 @@ pipeline {
                      env.provider = json_data['provider']
                      env.namespace = json_data['namespace']
                      env.version = json_data['version']
-                     env.url = "${ARTIFACTORY_BASE_URL}/${env.namespace}/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz"
+                     env.url = "${ARTIFACTORY_BASE_URL}/${env.namespace}/${env.module_name}/${env.provider}/${BUILD_NUMBER}/${env.version}.tgz//*?archive=tar.gz"
                      def jobdesc = sprintf("%s %s",  env.module_name, env.version)
                      currentBuild.description = jobdesc.toLowerCase()
                  }
